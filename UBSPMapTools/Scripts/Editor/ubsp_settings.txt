@@ -1,0 +1,7 @@
+﻿C:/Users/John/Desktop/Q3Project
+Assets/MapContent/Materials
+Assets/MapContent/Models
+Assets/MapContent/Sound
+Assets/ModelPrefabs
+3000
+0.02
