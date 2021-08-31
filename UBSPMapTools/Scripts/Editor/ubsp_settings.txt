@@ -1,4 +1,4 @@
-﻿C:/Users/John/Desktop/Q3Project
+
 Assets/MapContent/Materials
 Assets/MapContent/Models
 Assets/MapContent/Sound
