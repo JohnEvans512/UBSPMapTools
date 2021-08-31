@@ -7,6 +7,8 @@ collision geometry, all custom entities, and just everything. The main map model
 Brush entities like doors, elevators and detail objects, become separate models. The package also includes high quality first person movement controller, and basic entity scripts for
 doors, buttons and elevators.
 
+**This is only the code, the package is here: https://github.com/JohnEvans512/UBSPMapTools/releases/tag/v0.9**
+
 For usage instructions see UBSPMaual.txt
 
 The tools are completely free and fully functional, but it could still use some work and propper documentation.
