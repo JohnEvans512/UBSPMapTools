@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright (c) 2021 John Evans
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -22,11 +22,11 @@ SOFTWARE.
 
 #define RB_INTERACTION // Push rigid bodies that we bump into, and apply weight when standing on top of them.
 //#define USE_SOUNDS // Play Sfx for footsteps jump and landing.
-#define USE_CROUCH // "Crouch" button needs to be set up in the settings.
+//#define USE_CROUCH // "Crouch" button needs to be set up in the settings.
 #define USE_MOUSE_SMOOTHING
 #define ESC_TO_QUIT
 #define HANDLE_CURSOR // Hide cursor when running compiled project.
-#define USE_GRAB_ACTIVATE // Activate activators, and pick up small rigidbody objects, "Activate" button needs to be set up in the settings.
+//#define USE_GRAB_ACTIVATE // Activate activators, and pick up small rigidbody objects, "Activate" button needs to be set up in the settings.
 //#define USE_SPRINT
 
 using System.Collections;
@@ -64,7 +64,6 @@ public class UBSPPlayer : MonoBehaviour
 	private float camera_offset_y = 0.72f;
 	private float gravity = 0.0f;
 	private float crouch_value = -0.01f;
-	private float crouch_value_s = 0;
 	private Vector3 move_input;
 	private Vector3 move_vector;
 	private Vector3 inertia_vector;
@@ -84,14 +83,15 @@ public class UBSPPlayer : MonoBehaviour
 	private RaycastHit hit_surface;
 	private const float playerHeight = 1.8f;
 	private const float cameraOffset = 0.72f;
-	#if USE_GRAB_ACTIVATE
 	private bool has_object = false;
 	private Rigidbody object_rb = null;
 	private float contact_distance = 0;
-	#endif
-	private Vector3 center_offset;
 	private Vector3 vector_down;
+	#if USE_CROUCH
 	private Vector3 vector_up;
+	private float crouch_value_s = 0;
+	private Vector3 center_offset;
+	#endif
 	private Vector3 vector_zero;
 	private Vector3 surface_normal;
 	private Vector3 tangent;
@@ -110,8 +110,10 @@ public class UBSPPlayer : MonoBehaviour
 		move_vector = new Vector3(0, 0, 0);
 		inertia_vector = new Vector3(0, 0, 0);
 		move_vector_add = new Vector3(0, 0, 0);
+		#if USE_CROUCH
 		center_offset = new Vector3(0, 0, 0);
 		vector_up = new Vector3(0, 1.0f, 0);
+		#endif
 		vector_down = new Vector3(0, -1.0f, 0);
 		vector_zero = new Vector3(0, 0, 0);
 		surface_normal = new Vector3(0, 1.0f, 0);
@@ -142,12 +144,10 @@ public class UBSPPlayer : MonoBehaviour
 
 	void FixedUpdate ()
 	{
-		#if USE_GRAB_ACTIVATE
 		if (has_object)
 		{
 			object_rb.velocity = (playerCamera.transform.position + (playerCamera.transform.forward * contact_distance) - object_rb.position) * 30.0f;	
 		}
-		#endif
 
 		#if RB_INTERACTION
 		if (apply_weight)
@@ -389,19 +389,6 @@ public class UBSPPlayer : MonoBehaviour
 					}
 				}
 			}
-			else
-			{
-				if (Input.GetButton("Fire1") || Input.GetButton("Activate"))
-				{
-					if (Physics.Raycast(playerCamera.transform.position, playerCamera.transform.forward, out hit, 1.5f))
-					{
-						if (hit.collider.tag == "activator")
-						{
-							hit.collider.SendMessage("activate2");
-						}
-					}
-				}	
-			}
 		}
 		else
 		{
@@ -418,6 +405,43 @@ public class UBSPPlayer : MonoBehaviour
 				has_object = false;
 				object_rb.freezeRotation = false;
 				object_rb.interpolation = RigidbodyInterpolation.None;
+				object_rb = null;
+			}
+		}
+		#else
+		if (!has_object)
+		{
+			if (Input.GetButtonDown("Fire1"))
+			{
+				if (Physics.Raycast(playerCamera.transform.position + playerCamera.transform.forward * 0.35f, playerCamera.transform.forward, out hit, 1.5f)) // A little hack so we don't raycast player collider
+				{
+					UBSPBaseActivator activator = hit.collider.GetComponentInChildren<UBSPBaseActivator>();
+					if (activator != null)
+					{
+						activator.activate(transform);
+					}
+					else
+					{
+						object_rb = hit.collider.attachedRigidbody;
+						if (object_rb != null && object_rb.mass < 50.0f)
+						{
+							has_object = true;
+							object_rb.freezeRotation = true;
+							object_rb.interpolation = RigidbodyInterpolation.Interpolate;
+							contact_distance = Vector3.Distance(playerCamera.transform.position, object_rb.transform.position);
+						}
+					}
+				}
+			}
+		}
+		else
+		{
+			if (Input.GetButtonDown("Fire1"))
+			{
+				has_object = false;
+				object_rb.freezeRotation = false;
+				object_rb.interpolation = RigidbodyInterpolation.None;
+				object_rb.AddForce(playerCamera.transform.forward * 7.0f, ForceMode.Impulse);
 				object_rb = null;
 			}
 		}
