@@ -1,4 +1,4 @@
-﻿// TextureCheckIn
+// TextureCheckIn
 // TextureCheckOut
 // GetTexturesFolder
 // WritePNG
