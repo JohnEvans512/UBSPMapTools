@@ -45,11 +45,13 @@ namespace UBSPEntities
 		private float angle2;
 		private float i1 = 0;
 		private bool waiting = false;
-		
+		private bool zy = false;
 
 		void Start () 
 		{
 			closedRotation = transform.localRotation;
+			MeshFilter mf1 = GetComponentInChildren<MeshFilter>();
+			if (mf1.sharedMesh.bounds.max.z - mf1.sharedMesh.bounds.min.z > mf1.sharedMesh.bounds.max.x - mf1.sharedMesh.bounds.min.x) zy = true;
 			open_dir = !CCW;
 			if (moveSound != null || closeSound != null)
 			{
@@ -90,8 +92,16 @@ namespace UBSPEntities
 				{
 					if (actor != null && autoDir && axis == Axis.Y) 
 					{
-						if (CCW) open_dir = (transform.InverseTransformPoint(actor.position).z > 0);
-						else open_dir = (transform.InverseTransformPoint(actor.position).z < 0);
+						if (zy)
+						{
+							if (CCW) open_dir = (transform.InverseTransformPoint(actor.position).x > 0);
+							else open_dir = (transform.InverseTransformPoint(actor.position).x < 0);							
+						}
+						else
+						{
+							if (CCW) open_dir = (transform.InverseTransformPoint(actor.position).z > 0);
+							else open_dir = (transform.InverseTransformPoint(actor.position).z < 0);
+						}
 					}
 					if (moveSound != null)
 					{
