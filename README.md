@@ -11,7 +11,7 @@ doors, buttons and elevators.
 
 For usage instructions see UBSPMaual.txt
 
-The tools are completely free and fully functional, but it could still use some work and propper documentation.
+The tools are completely free and fully functional, but it could still use some work and proper documentation.
 So if you find this thing useful, and have a few dollars to spare, please do, it will be extremely helpful.
 
 PayPal: evansj5125@gmail.com
