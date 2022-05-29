@@ -10,10 +10,3 @@ doors, buttons and elevators.
 **This is only the code, the package is here: https://github.com/JohnEvans512/UBSPMapTools/releases**
 
 For usage instructions see UBSPMaual.txt
-
-The tools are completely free and fully functional, but it could still use some work and proper documentation.
-So if you find this thing useful, and have a few dollars to spare, please do, it will be extremely helpful.
-
-PayPal: evansj5125@gmail.com
-
-Bitcoin: bc1q2604w38jp08k4j07eexzz92qgq3m2vxn6sxlfq
